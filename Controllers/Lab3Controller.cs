@@ -1,6 +1,8 @@
 ﻿using LW_1.Models.Entities;
+using LW_1.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,14 +35,51 @@ namespace LW_1.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddGroup(Группы newGroup)
+        [ValidateAntiForgeryToken()]
+        public ActionResult CreateGroup(GroupVM newGroup)
         {
             if(ModelState.IsValid)
             {
-
+                using (var context = new TPUEntities())
+                {
+                    Группы group = new Группы
+                    {
+                        ID_группы = Guid.NewGuid(),
+                        ID_института = newGroup.ID_института,
+                        Наименование = newGroup.Наименование,
+                        Год_поступления = newGroup.Год_поступления,
+                        Длительность_обучения = newGroup.Длительность_обучения,
+                        Код_формы_обучения = newGroup.Код_формы_обучения,
+                        Код_направления_подготовки = newGroup.Код_направления_подготовки
+                    };
+                    context.Группы.Add(group);
+                    context.SaveChanges();
+                }
                 return RedirectToAction("ListGroup");
             }
+            foreach (var entry in ModelState.Values)
+            {
+                foreach (var error in entry.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+            }
+
             return View(newGroup);
+        }
+
+        [HttpGet]
+        public ActionResult CreateStudent()
+        {
+            List<Tuple<string, bool>> s = new List<Tuple<string, bool>> { 
+                new Tuple<string, bool>("Женский", false),
+                new Tuple<string, bool>("Мужской", true)
+            };
+
+            ViewBag.S = new SelectList(s, "Item2", "Item1");
+
+
+            return View();
         }
     }
 }

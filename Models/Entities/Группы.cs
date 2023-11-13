@@ -24,20 +24,17 @@ namespace LW_1.Models.Entities
             this.Студенты_кураторы = new HashSet<Студенты_кураторы>();
         }
         public System.Guid ID_группы { get; set; }
-        [Required]
-        [DisplayName("Институт")]
+
         public System.Guid ID_института { get; set; }
-        [Required]
-        [StringLength(20, MinimumLength = 3)]
+
         public string Наименование { get; set; }
-        [Required]
+
         public int Год_поступления { get; set; }
-        [Required]
-        [Range(0,10)]
+
         public int Длительность_обучения { get; set; }
-        [Required]
+
         public int Код_формы_обучения { get; set; }
-        [Required]
+
         public string Код_направления_подготовки { get; set; }
     
         public virtual Институты Институты { get; set; }
